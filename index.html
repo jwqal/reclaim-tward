@@ -1,243 +1,933 @@
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reclaim T Ward | Policy Framework</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-dark: #1a1a1a;
-            --accent-red: #8c1d1d; /* Subtle academic red */
-            --bg-paper: #f9f7f2;   /* Newsprint-style off-white */
-            --text-main: #2c2c2c;
-            --border-color: #d1d1d1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reclaim T Ward — Mulund</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f4f0e8;
+    --saffron: #e85d04;
+    --saffron-light: #f48c06;
+    --teal: #0d6e6e;
+    --teal-light: #15a89a;
+    --stone: #c9c0b0;
+    --muted: #6b6458;
+    --rule: #d4cfc6;
+    --accent-bg: #1a1a24;
+  }
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+ 
+  /* ─── NOISE TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+ 
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(244, 240, 232, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+ 
+  .nav-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--saffron);
+  }
+ 
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+     
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding-top: 80px;
+    background: var(--accent-bg);
+    color: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(244,240,232,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244,240,232,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+ 
+  .hero-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .hero-circle-1 {
+    width: 600px; height: 600px;
+    background: rgba(232, 93, 4, 0.15);
+    top: -100px; right: -100px;
+  }
+  .hero-circle-2 {
+    width: 400px; height: 400px;
+    background: rgba(13, 110, 110, 0.2);
+    bottom: 0; left: 10%;
+  }
+ 
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 4rem 4rem;
+    position: relative; z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+ 
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--saffron);
+  }
+ 
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 9vw, 9rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+ 
+  .hero-title .ward {
+    display: block;
+    color: var(--saffron);
+    font-style: italic;
+  }
 
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Source Sans Pro', sans-serif;
-            background-color: var(--bg-paper);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
+    .hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(244,240,232,0.6);
+    max-width: 520px;
+    margin-top: 2rem;
+    border-left: 2px solid var(--saffron);
+    padding-left: 1.5rem;
+    font-style: italic;
+  }
+ 
+  .hero-cta {
+    display: flex; gap: 1.5rem; margin-top: 4rem; flex-wrap: wrap;
+  }
+ 
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 2.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    transition: all 0.25s;
+  }
+ 
+  .btn-primary {
+    background: var(--saffron);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--saffron-light); transform: translateY(-2px); }
+ 
+  .btn-outline {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(244,240,232,0.3);
+  }
+  .btn-outline:hover { border-color: var(--paper); transform: translateY(-2px); }
+ 
+  .hero-bottom {
+    padding: 2.5rem 4rem;
+    border-top: 1px solid rgba(244,240,232,0.1);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: relative; z-index: 2;
+    max-width: 1100px; margin: 0 auto; width: 100%;
+  }
+ 
+  .hero-stat { padding: 0 2rem; border-left: 1px solid rgba(244,240,232,0.15); }
+  .hero-stat:first-child { border-left: none; padding-left: 0; }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--saffron);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 0.72rem;
+    color: rgba(244,240,232,0.45);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+ 
+  /* ─── SECTIONS ─── */
+  section { padding: 7rem 4rem; }
+ 
+  .container { max-width: 1100px; margin: 0 auto; }
+ 
+  .section-label {
+      font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--rule); max-width: 120px;
+  }
+ 
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+ 
+  /* ─── MANIFESTO ─── */
+  .manifesto {
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+ 
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+ 
+  .manifesto-aside {
+    position: sticky; top: 120px;
+  }
+ 
+  .manifesto-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--teal);
+    border-left: 3px solid var(--teal);
+    padding-left: 1.5rem;
+    margin-top: 2rem;
+  }
+ 
+  .manifesto-body p {
+    font-size: 1.05rem;
+    color: #2a2a2a;
+    margin-bottom: 1.8rem;
+    max-width: 680px;
+  }
+ 
+  .manifesto-body p strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+ 
+  /* ─── PILLARS / MISALIGNMENT ─── */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 4rem;
+  }
+ 
+  .issue-card {
+    padding: 2.5rem;
+    border: 1px solid var(--rule);
+    background: #fff;
+    position: relative;
+  }
+ 
+  .issue-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--saffron);
+    }
+      .issue-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+ 
+  .issue-card p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+ 
+  /* ─── POLICIES ─── */
+  .policies-section {
+    background: var(--accent-bg);
+    color: var(--paper);
+  }
+ 
+  .policies-section .section-label { color: var(--teal-light); }
+  .policies-section .section-label::after { background: rgba(244,240,232,0.15); }
+ 
+  .policy-list { margin-top: 5rem; }
+ 
+  .policy-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 3rem;
+    padding: 3.5rem 0;
+    border-top: 1px solid rgba(244,240,232,0.1);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+ 
+  .policy-item:last-child { border-bottom: 1px solid rgba(244,240,232,0.1); }
+ 
+  .policy-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(232,93,4,0.25);
+    line-height: 1;
+    transition: color 0.3s;
+    padding-top: 0.2rem;
+  }
+ 
+  .policy-item:hover .policy-num { color: var(--saffron); }
+ 
+  .policy-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 0.8rem;
+  }
+ 
+  .policy-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--paper);
+  }
+ 
+  .policy-body {
+    font-size: 0.95rem;
+    color: rgba(244,240,232,0.55);
+    line-height: 1.8;
+    max-width: 680px;
+    display: none;
+  }
+ 
+  .policy-item.active .policy-body { display: block; }
+  .policy-item.active .policy-num { color: var(--saffron); }
 
-        /* Navigation */
-        nav {
-            background: #fff;
-            border-bottom: 2px solid var(--primary-dark);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .nav-container {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        nav a { text-decoration: none; color: var(--text-main); transition: 0.3s; }
-        nav a:hover { color: var(--accent-red); }
+      .policy-dir {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(244,240,232,0.04);
+    border-left: 2px solid var(--saffron);
+  }
+ 
+  .policy-dir h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 0.8rem;
+  }
+ 
+  .policy-dir ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+ 
+  .policy-dir ul li {
+    font-size: 0.9rem;
+    color: rgba(244,240,232,0.65);
+    padding-left: 1.2rem;
+    position: relative;
+  }
+ 
+  .policy-dir ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--saffron);
+    font-size: 0.8rem;
+  }
+ 
+  .policy-rationale {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(244,240,232,0.4);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(244,240,232,0.08);
+  }
+ 
+  .expand-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    cursor: pointer;
+    background: none; border: none;
+    transition: color 0.2s;
+  }
+ 
+  .expand-btn:hover { color: var(--paper); }
+ 
+  .expand-icon {
+    width: 18px; height: 18px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    transition: transform 0.3s;
+  }
+ 
+  .policy-item.active .expand-icon { transform: rotate(45deg); }
+ 
+  /* ─── ACCOUNTABILITY ─── */
+  .accountability {
+    background: #fff;
+    border-top: 1px solid var(--rule);
+  }
+ 
+  .measures-grid {
+      grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+ 
+  .measure-card {
+    background: var(--paper);
+    padding: 3rem 2.5rem;
+    transition: background 0.3s;
+  }
+ 
+  .measure-card:hover { background: var(--ink); color: var(--paper); }
+  .measure-card:hover .measure-icon { color: var(--saffron); }
+  .measure-card:hover .measure-desc { color: rgba(244,240,232,0.6); }
+ 
+  .measure-icon {
+    font-size: 1.8rem;
+    color: var(--teal);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+  }
+ 
+  .measure-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    transition: color 0.3s;
+  }
+ 
+  .measure-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    transition: color 0.3s;
+  }
+ 
+  /* ─── CLOSING ─── */
+  .closing {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 8rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .closing::before {
+    content: 'MULUND';
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(8rem, 20vw, 20rem);
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+ 
+  .closing-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+ 
+  .closing-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+ 
+  .closing-heading em { color: var(--saffron); font-style: italic; }
 
-        /* Header Section */
-        header {
-            max-width: 800px;
-            margin: 4rem auto;
-            text-align: center;
-            padding: 0 20px;
-        }
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-dark);
-        }
-        .subtitle {
-            font-family: 'Lora', serif;
-            font-style: italic;
-            font-size: 1.2rem;
-            color: #555;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 10px 0;
-            display: inline-block;
-        }
-
-        /* Main Content */
-        article {
-            max-width: 750px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 4rem;
-        }
-
-        h2 {
-            font-family: 'Playfair Display', serif;
-            border-bottom: 1px solid var(--accent-red);
-            padding-bottom: 10px;
-            margin-top: 3rem;
-        }
-
-        h3 {
-            font-family: 'Source Sans Pro', sans-serif;
-            color: var(--accent-red);
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            margin-top: 2rem;
-        }
-
-        p {
-            font-family: 'Lora', serif;
-            font-size: 1.15rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .policy-box {
-            background: #fdfdfd;
-            border-left: 4px solid var(--primary-dark);
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border: 1px solid #eee;
-            border-left: 4px solid var(--accent-red);
-        }
-
-        .rationale {
-            font-size: 0.95rem;
-            font-style: italic;
-            background: #eee;
-            padding: 10px 15px;
-            margin-top: 10px;
-        }
-
-        ul { padding-left: 20px; font-family: 'Lora', serif; }
-        li { margin-bottom: 10px; }
-
-        footer {
-            text-align: center;
-            padding: 3rem;
-            background: var(--primary-dark);
-            color: #fff;
-        }
-
-        .quote-section {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            text-align: center;
-            margin: 3rem 0;
-            color: var(--accent-red);
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .nav-container { font-size: 0.7rem; flex-wrap: wrap; gap: 10px; }
-        }
-    </style>
+      .closing-sub {
+    font-size: 1.1rem;
+    color: rgba(244,240,232,0.55);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-style: italic;
+  }
+ 
+  .principles {
+    display: flex; justify-content: center; gap: 3rem;
+    margin-top: 4rem; flex-wrap: wrap;
+  }
+ 
+  .principle {
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  }
+ 
+  .principle-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--saffron);
+  }
+ 
+  .principle-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(244,240,232,0.5);
+  }
+ 
+  /* ─── FOOTER ─── */
+  footer {
+    background: #050508;
+    color: rgba(244,240,232,0.3);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap; gap: 1rem;
+  }
+ 
+  footer span { color: var(--saffron); }
+ 
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+ 
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+ 
+  /* ─── PROGRESS BAR ─── */
+  #progress {
+    position: fixed; top: 0; left: 0;
+    height: 2px; background: var(--saffron);
+    z-index: 200; width: 0%;
+    transition: width 0.1s;
+  }
+ 
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    .hero-content { padding: 4rem 1.5rem 2rem; }
+    .hero-bottom { padding: 2rem 1.5rem; grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stat { border-left: none; padding-left: 0; border-top: 1px solid rgba(244,240,232,0.1); padding-top: 1.5rem; }
+    .hero-stat:first-child { border-top: none; padding-top: 0; }
+          .manifesto-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .manifesto-aside { position: static; }
+    .two-col { grid-template-columns: 1fr; }
+    .policy-item { grid-template-columns: 50px 1fr; gap: 1.5rem; }
+    .measures-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+    .closing { padding: 6rem 1.5rem; }
+  }
+</style>
 </head>
 <body>
-
+ 
+<div id="progress"></div>
+ 
 <nav>
-    <div class="nav-container">
-        <a href="#intro">Introduction</a>
-        <a href="#problems">Structural Problems</a>
-        <a href="#priorities">Policy Priorities</a>
-        <a href="#reform">Reform</a>
-    </div>
+  <div class="nav-brand">Reclaim T Ward</div>
+  <ul class="nav-links">
+    <li><a href="#manifesto">Context</a></li>
+    <li><a href="#priorities">Priorities</a></li>
+    <li><a href="#accountability">Accountability</a></li>
+    <li><a href="#vision">Vision</a></li>
+  </ul>
 </nav>
-
-<header>
-    <h1>Reclaim T Ward</h1>
-    <p class="subtitle">A Policy Framework for Accountable Urban Governance in Mulund</p>
-</header>
-
-<article>
-    <section id="intro">
-        <h2>I. Introduction: Growth Without Governance</h2>
-        <p>Mulund stands at a critical urban juncture. Once perceived as a relatively planned suburban extension, it is now experiencing the cumulative pressures of accelerated real estate development, strained infrastructure, and uneven civic prioritisation.</p>
-        <p>The issue is not growth per se. Cities must evolve. However, when expansion outpaces institutional capacity and planning coherence, the consequences manifest as congestion, flooding, reduced liveability, and declining public trust.</p>
-        
-        <div class="quote-section">
-            "In a city governed by one of the wealthiest municipal bodies in the country, why do basic civic outcomes remain inconsistent?"
+ 
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-circle hero-circle-1"></div>
+  <div class="hero-circle hero-circle-2"></div>
+ 
+  <div class="hero-content">
+    <div class="hero-eyebrow">T Ward · Mulund · Mumbai</div>
+    <h1 class="hero-title">
+      Reclaim
+      <span class="ward">T Ward.</span>
+    </h1>
+    <p class="hero-subtitle">
+      In a city governed by one of the wealthiest municipal bodies in the country, why do basic civic outcomes remain inconsistent?
+    </p>
+    <div class="hero-cta">
+      <a href="#priorities" class="btn btn-primary">Read the Framework →</a>
+      <a href="#manifesto" class="btn btn-outline">Our Position</a>
+    </div>
+  </div>
+ 
+  <div class="hero-bottom">
+    <div class="hero-stat">
+      <div class="hero-stat-num">5</div>
+      <div class="hero-stat-label">Policy Priorities</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Core Principles</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">1</div>
+      <div class="hero-stat-label">Clear Objective — Accountable Governance</div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ─── MANIFESTO ─── -->
+<section class="manifesto" id="manifesto">
+  <div class="container">
+    <div class="manifesto-grid">
+      <div class="manifesto-aside reveal">
+        <div class="section-label">Context</div>
+        <h2 class="section-heading">Growth Without Governance</h2>
+        <blockquote class="manifesto-quote">
+          "The issue is not growth per se. Cities must evolve. But when expansion outpaces planning coherence, liveability declines."
+        </blockquote>
         </div>
-    </section>
-
-    <section id="problems">
-        <h2>II. The Structural Problem</h2>
-        <p>Across Mulund, there is a visible disconnect between capital-intensive urban development and foundational civic provisioning.</p>
-        <p>High-density construction continues to be sanctioned even as drainage systems remain outdated, road capacities are exceeded, and pedestrian infrastructure is neglected.</p>
-    </section>
-
-    <section id="priorities">
-        <h2>III. Policy Priorities</h2>
-
-        <div class="policy-box">
-            <h3>1. Regulating Growth</h3>
-            <p><strong>Policy Direction:</strong></p>
-            <ul>
-                <li>A temporary moratorium on new high-density building approvals until critical infrastructure benchmarks are met.</li>
-                <li>Permissions contingent upon drainage capacity, water supply, and road network upgrades.</li>
-            </ul>
-            <div class="rationale"><strong>Rationale:</strong> Infrastructure must precede, not follow, density.</div>
+      <div class="manifesto-body">
+        <p class="reveal">Mulund stands at a critical urban juncture. Once perceived as a relatively planned suburban extension, it is now experiencing the cumulative pressures of <strong>accelerated real estate development, strained infrastructure, and uneven civic prioritisation.</strong></p>
+        <p class="reveal">When expansion outpaces institutional capacity and planning coherence, the consequences manifest as congestion, flooding, reduced liveability, and declining public trust.</p>
+        <p class="reveal">This document does not present a catalogue of electoral assurances. Instead, it outlines a <strong>policy-oriented framework</strong> grounded in three core principles: infrastructural adequacy, spatial fairness, and administrative accountability.</p>
+        <p class="reveal">At its core lies a simple question: <em>In a city governed by one of the wealthiest municipal bodies in the country, why do basic civic outcomes remain inconsistent?</em></p>
+      </div>
+    </div>
+ 
+    <!-- Misalignment -->
+    <div style="margin-top: 6rem;">
+      <div class="section-label reveal">The Problem</div>
+      <h2 class="section-heading reveal">A Misalignment<br>of Priorities</h2>
+      <div class="two-col" style="margin-top: 3rem;">
+        <div class="issue-card reveal">
+          <h3>Capital-intensive Urban Development</h3>
+          <p>High-density construction continues to be sanctioned even as foundational civic systems buckle under pressure. Approvals and expansion <em>precede</em> systemic readiness.</p>
         </div>
-
-        <div class="policy-box">
-            <h3>2. Reclaiming Public Space</h3>
-            <p><strong>Policy Direction:</strong></p>
-            <ul>
-                <li>Creation of continuous, obstruction-free pedestrian corridors.</li>
-                <li>Scientifically planned hawking zones based on footfall data and spatial mapping.</li>
-            </ul>
-            <div class="rationale"><strong>Rationale:</strong> Economic activity should not compromise basic mobility rights.</div>
+        <div class="issue-card reveal">
+          <h3>Foundational Civic Neglect</h3>
+          <p>Drainage systems remain outdated. Road capacities are exceeded. Pedestrian infrastructure is neglected. This reflects not administrative delay alone, but a deeper prioritisation imbalance.</p>
         </div>
-
-        <div class="policy-box">
-            <h3>3. Equitable Urban Planning (PAP)</h3>
-            <p><strong>Policy Direction:</strong></p>
-            <ul>
-                <li>Advocacy for a decentralised city-wide PAP rehabilitation framework.</li>
-                <li>Mandatory infrastructure readiness assessments prior to any relocation.</li>
-            </ul>
-            <div class="rationale"><strong>Rationale:</strong> Urban inclusion cannot come at the cost of creating new zones of stress.</div>
+      </div>
+      <p class="reveal" style="margin-top: 2.5rem; font-style: italic; color: var(--muted); font-size: 1rem; border-top: 1px solid var(--rule); padding-top: 2rem;">
+        Correcting this requires a shift from <strong>reactive governance</strong> to <strong>anticipatory planning</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── POLICIES ─── -->
+<section class="policies-section" id="priorities">
+  <div class="container">
+    <div class="section-label reveal">Policy Framework</div>
+    <h2 class="section-heading reveal" style="color: var(--paper);">Five Priority<br>Directions</h2>
+ 
+    <div class="policy-list">
+ 
+      <!-- Policy 1 -->
+      <div class="policy-item reveal" onclick="togglePolicy(this)">
+        <div class="policy-num">01</div>
+        <div>
+          <div class="policy-tag">Regulation</div>
+          <div class="policy-title">Regulating Growth: Aligning Development with Infrastructure Capacity</div>
+          <button class="expand-btn"><span class="expand-icon">+</span> Expand</button>
+          <div class="policy-body">
+            <p>Unregulated vertical expansion in Mulund has intensified pressure on already fragile civic systems.</p>
+            <div class="policy-dir">
+              <h4>Policy Direction</h4>
+              <ul>
+                            <li>A temporary moratorium on new high-density building approvals until critical infrastructure benchmarks are met</li>
+                <li>Infrastructure-linked clearance criteria — permissions contingent on drainage capacity upgrades</li>
+                <li>Water supply augmentation and road network decongestion as prerequisites</li>
+              </ul>
+            </div>
+            <p class="policy-rationale">Urban development must be sequenced, not simultaneous. Infrastructure must precede, not follow, density.</p>
+          </div>
         </div>
-
-        <div class="policy-box">
-            <h3>4. Fiscal Transparency</h3>
-            <p><strong>Policy Direction:</strong></p>
-            <ul>
-                <li>Publication of accessible ward-level expenditure reports.</li>
-                <li>Project tracking dashboards with timelines and status updates.</li>
-            </ul>
-            <div class="rationale"><strong>Rationale:</strong> Transparency is foundational to public trust.</div>
+      </div>
+ 
+      <!-- Policy 2 -->
+      <div class="policy-item reveal" onclick="togglePolicy(this)">
+        <div class="policy-num">02</div>
+        <div>
+          <div class="policy-tag">Public Space</div>
+          <div class="policy-title">Reclaiming Public Space: Pedestrian Rights and Informal Economies</div>
+          <button class="expand-btn"><span class="expand-icon">+</span> Expand</button>
+          <div class="policy-body">
+            <p>The erosion of pedestrian space in Mulund — particularly in high-footfall zones such as areas surrounding the railway station — reflects a broader governance gap. The current approach has produced a zero-sum conflict between pedestrian mobility and informal livelihoods.</p>
+            <div class="policy-dir">
+              <h4>Policy Direction</h4>
+              <ul>
+                <li>Creation of continuous, obstruction-free pedestrian corridors in critical transit zones</li>
+                <li>Scientifically planned hawking zones based on footfall data</li>
+                <li>Spatial mapping and stakeholder consultation as standard process</li>
+              </ul>
+            </div>
+            <p class="policy-rationale">The objective is not eviction, but orderly coexistence — where economic activity does not compromise basic mobility rights.</p>
+          </div>
         </div>
-    </section>
+      </div>
+ 
+      <!-- Policy 3 -->
+      <div class="policy-item reveal" onclick="togglePolicy(this)">
+        <div class="policy-num">03</div>
+        <div>
+          <div class="policy-tag">Spatial Equity</div>
+          <div class="policy-title">Equitable Urban Planning: Rethinking PAP Relocation</div>
+          <button class="expand-btn"><span class="expand-icon">+</span> Expand</button>
+          <div class="policy-body">
+            <p>The concentration of Project Affected Person (PAP) housing in specific localities — including parts of Mulund East — raises important questions of spatial equity and planning justice.</p>
+            <div class="policy-dir">
+              <h4>Policy Direction</h4>
+              <ul>
+                <li>Advocacy for a decentralised, city-wide PAP rehabilitation framework</li>
+                <li>Mandatory infrastructure readiness assessments prior to any relocation decision</li>
+                <li>Integration of PAP housing within broader urban planning, not as isolated clusters</li>
+              </ul>
+            </div>
+            <p class="policy-rationale">Urban inclusion cannot come at the cost of creating new zones of infrastructural stress. Equity must be both social and spatial.</p>
+          </div>
+        </div>
+      </div>     
 
-    <section id="reform">
-        <h2>IV. Governance Reform</h2>
-        <p>Beyond sectoral policies, we propose a reimagining of the interface between citizens and governance:</p>
-        <ul>
-            <li>Regular, structured public accountability forums at the ward level.</li>
-            <li>Digitised and accessible civic reporting systems.</li>
-            <li>Institutional mechanisms for citizen feedback.</li>
-        </ul>
-    </section>
+              <!-- Policy 4 -->
+      <div class="policy-item reveal" onclick="togglePolicy(this)">
+        <div class="policy-num">04</div>
+        <div>
+          <div class="policy-tag">Transparency</div>
+          <div class="policy-title">Fiscal Transparency: Bridging the Accountability Deficit</div>
+          <button class="expand-btn"><span class="expand-icon">+</span> Expand</button>
+          <div class="policy-body">
+            <p>A recurring concern in municipal governance is the opacity surrounding expenditure. While allocations may be substantial, their translation into visible, high-impact outcomes remains uneven.</p>
+            <div class="policy-dir">
+              <h4>Policy Direction</h4>
+              <ul>
+                <li>Publication of ward-level expenditure reports in accessible formats</li>
+                <li>Introduction of project tracking dashboards with timelines and status updates</li>
+                <li>Reprioritisation of spending towards critical traffic bottlenecks and public healthcare infrastructure</li>
+              </ul>
+            </div>
+            <p class="policy-rationale">Transparency is not merely informational — it is foundational to public trust and participatory governance.</p>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Policy 5 -->
+      <div class="policy-item reveal" onclick="togglePolicy(this)">
+        <div class="policy-num">05</div>
+        <div>
+          <div class="policy-tag">Mobility</div>
+          <div class="policy-title">Mobility & Connectivity: Addressing Chronic Congestion</div>
+          <button class="expand-btn"><span class="expand-icon">+</span> Expand</button>
+          <div class="policy-body">
+            <p>Mulund's connectivity challenges — particularly along key arterial routes — are not new, but have intensified due to population and vehicular growth.</p>
+            <div class="policy-dir">
+              <h4>Policy Direction</h4>
+              <ul>
+                <li>Time-bound acceleration of Development Plan (DP) road linkages</li>
+                <li>Strategic infrastructure projects such as the Goregaon–Mulund Link Road</li>
+                <li>Institutionalisation of monthly public progress disclosures</li>
+              </ul>
+            </div>
+            <p class="policy-rationale">Urban mobility must be treated as an economic and social priority, not a residual concern.</p>
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── ACCOUNTABILITY ─── -->
+<section class="accountability" id="accountability">
+  <div class="container">
+    <div class="section-label reveal">Civic Interface</div>
+    <h2 class="section-heading reveal">From Representation<br>to Accountability</h2>
+    <p class="reveal" style="margin-top: 1.5rem; font-size: 1.05rem; color: var(--muted); max-width: 600px;">
+        Beyond sectoral policies, there is a need to reimagine the interface between citizens and governance structures — a shift from episodic electoral engagement to <em>continuous civic participation.</em>
+    </p>
+ 
+    <div class="measures-grid">
+      <div class="measure-card reveal">
+        <div class="measure-icon">◎</div>
+        <div class="measure-title">Public Accountability Forums</div>
+        <div class="measure-desc">Regular, structured forums at the ward level where citizens engage directly with elected representatives on outcomes, not promises.</div>
+      </div>
+      <div class="measure-card reveal">
+        <div class="measure-icon">⊞</div>
+        <div class="measure-title">Digitised Civic Reporting</div>
+        <div class="measure-desc">Accessible, digitised systems for civic issue reporting with transparent status tracking available to every resident.</div>
+      </div>
+      <div class="measure-card reveal">
+        <div class="measure-icon">◈</div>
+        <div class="measure-title">Citizen Feedback Integration</div>
+        <div class="measure-desc">Institutional mechanisms ensuring citizen feedback is formally integrated into planning and decision-making processes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── CLOSING ─── -->
+<section class="closing" id="vision">
+  <div class="closing-content">
+    <div class="section-label reveal" style="justify-content: center; color: rgba(244,240,232,0.4);">Towards A More Coherent Urban Future</div>
+    <h2 class="closing-heading reveal">
+      Consistent, Principled<br>
+      <em>Administration.</em>
+    </h2>
+    <p class="closing-sub reveal">
+      Mulund's challenges are neither unique nor insurmountable. They are symptomatic of a broader urban condition — where governance struggles to keep pace with growth.
+    </p>
+    <p class="reveal" style="font-size: 1rem; color: rgba(244,240,232,0.4); max-width: 580px; margin: 0 auto 3rem; font-style: italic;">
+      The question is not whether change is possible, but whether governance is willing to prioritise long-term public outcomes over short-term expediency.
+    </p>
+ 
+    <div class="principles reveal">
+      <div class="principle">
+        <div class="principle-dot"></div>
+        <div class="principle-label">Planning Discipline</div>
+      </div>
+      <div class="principle">
+        <div class="principle-dot"></div>
+        <div class="principle-label">Equity</div>
+      </div>
+      <div class="principle">
+        <div class="principle-dot"></div>
+        <div class="principle-label">Transparency</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section>
-        <h2>V. Conclusion</h2>
-        <p>Mulund’s challenges are symptomatic of a broader urban condition—where governance struggles to keep pace with growth. What is required is consistent, principled administration rooted in planning discipline, equity, and transparency.</p>
-    </section>
-</article>
-
+    <!-- ─── FOOTER ─── -->
 <footer>
-    <p>&copy; 2026 Reclaim T Ward Initiative | Policy Over Rhetoric</p>
+  <div>Reclaim <span>T Ward</span> · Mulund · Mumbai</div>
+  <div>Infrastructural Adequacy · Spatial Fairness · Administrative Accountability</div>
+  <div><span>Policy Framework</span> · Not Electoral Assurances</div>
 </footer>
-
+ 
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / total) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+ 
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+ 
+  // Stagger children
+  document.querySelectorAll('.two-col, .measures-grid').forEach(grid => {
+    grid.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i * 0.12) + 's';
+    });
+  });
+ 
+  // Toggle policy
+  function togglePolicy(item) {
+    const wasActive = item.classList.contains('active');
+    document.querySelectorAll('.policy-item').forEach(p => p.classList.remove('active'));
+    if (!wasActive) item.classList.add('active');
+  }
+</script>
 </body>
 </html>
